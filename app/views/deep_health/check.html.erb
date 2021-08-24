@@ -1,0 +1,23 @@
+<h1>Deep Health Check</h1>
+
+<p>Overall status is <%if @overall_health %>healthy<%else%>unhealthy<%end%></p>
+
+<table>
+  <thead>
+  <tr>
+    <th>Name</th>
+    <th>URI</th>
+    <th>Response</th>
+  </tr>
+  </thead>
+
+  <tbody>
+  <% @dependency_checks.each do |dep_check| %>
+    <tr>
+      <td><%= dep_check[:name] %></td>
+      <td><%= dep_check[:uri] %></td>
+      <td><%= dep_check[:response] %></td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>
