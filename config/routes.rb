@@ -6,7 +6,11 @@ Rails.application.routes.draw do
   get "/deep_health_test_success", to: "deep_health#check_test_success"
   get "/deep_health_test_fail", to: "deep_health#check_test_fail"
 
+  # Frontend
   get "/guests", to: "guests#list"
   get "/guests_test", to: "guests#list_test"
+
+  # Backend
+  get "/guest_from_db", to: "guests_from_db#guests_from_db"
 
 end
