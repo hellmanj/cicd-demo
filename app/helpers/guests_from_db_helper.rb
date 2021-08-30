@@ -1,0 +1,2 @@
+module GuestsFromDbHelper
+end
