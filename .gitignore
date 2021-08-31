@@ -33,3 +33,5 @@ yarn-debug.log*
 .yarn-integrity
 
 .idea/
+config/mode.yml
+config/backend.yml

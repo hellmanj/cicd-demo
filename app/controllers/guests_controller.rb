@@ -6,7 +6,7 @@ class GuestsController < ApplicationController
   def list
     baseurl = "https://#{Rails.configuration.backend['host']}:#{Rails.configuration.backend['port']}"
     uri = URI("#{baseurl}/guest-list")
-    res = Net::HTTP.get_response(uri)
+    res = Net::HTTP.get_response(URI(uri))
     if res.is_a?(Net::HTTPSuccess)
       render_list(JSON.parse(res)["guests"])
     else
