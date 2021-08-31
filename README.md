@@ -1,24 +1,19 @@
-# README
+# CI/CD POC Project Demo Service
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+This is a database-less rails application meant for deployment into kubernetes clusters for pipeline evaluation.
 
-Things you may want to cover:
+## Configuration and Use
 
-* Ruby version
+The app can be deployed in two modes (frontend and backend) which is selected using [config/mode.yml](config/mode.yml)
 
-* System dependencies
+Frontend mode exposes the `/guests` endpoint which makes a request to the backend found at the location specified in [config/backend.yml](config/backend.yml) and then presents the results in HTML.
 
-* Configuration
+Backend mode exposes `/guest_from_db` endpoint which responds with some JSON representing a list of guests.
 
-* Database creation
+[Dockerfile](Dockerfile) builds the app and exposes the endpoints on port 9000 in the resulting image.  
 
-* Database initialization
+## Health Checks
 
-* How to run the test suite
+A 200 response from the `/health` endpoint indicates the app is healthy and able to respond to requests independent of health status of external dependencies.
 
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+A 200 response from the `/deep_health` endpoint indicates that the app and all external dependencies are healthy.  The results of each check are listed in a table in the response. 
