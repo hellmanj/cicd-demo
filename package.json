@@ -1,5 +1,5 @@
 {
-  "name": "cicd-demo1",
+  "name": "cicd-demo",
   "private": true,
   "dependencies": {
     "@rails/actioncable": "^6.0.0",
