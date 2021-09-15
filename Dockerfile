@@ -1,16 +1,10 @@
 FROM ruby:3.0.0
 
 # Create app directory
-WORKDIR /app
+WORKDIR /var/app
 
 # Install app code
 COPY . .
-
-# Install npm/Yarn
-RUN apt-get update -qq && apt-get install -y nodejs npm
-RUN npm install -g yarn
-# Install dependencies0
-RUN bundle config set --local deployment 'true' && bundle install && yarn install
 
 # Add a script to be executed every time the container starts.
 COPY entrypoint.sh /usr/bin/
