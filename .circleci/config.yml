@@ -11,7 +11,7 @@ jobs:
     steps:
       - checkout
       - run:
-          command: APP_VERSION=$(git describe --abbrev=0)
+          command: export APP_VERSION=$(git describe --abbrev=0) && echo APP_VERSION
       - restore_cache:
           keys:
             # when lock file changes, use increasingly general patterns to restore cache
@@ -28,7 +28,7 @@ jobs:
           key: v1-gem-cache-{{ arch }}-{{ .Branch }}-{{ checksum "Gemfile.lock" }}
       - aws-ecr/build-and-push-image:
           checkout: false
-          repo: $ENVIRONEMENT-$SITE-snt-apps
+          repo: $ENVIRONMENT-$SITE-snt-apps
           #remote-docker-layer-caching: true
           setup-remote-docker: yes
           tag: ${APP_VERSION}-${CIRCLE_BUILD_NUM}
