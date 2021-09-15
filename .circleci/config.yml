@@ -10,6 +10,14 @@ jobs:
     docker:
       - image: cimg/ruby:3.0.0-node
     steps:
+      - run:
+          command: find . -type d
+      - persist_to_workspace:
+          root: workspace
+          paths:
+            - .
+      - run:
+          command: find . -type d
       - checkout
 
       - run:
@@ -27,6 +35,12 @@ jobs:
     docker:
       - image: cimg/base:2021.04
     steps:
+      - run:
+            command: find . -type d
+      - attach_workspace:
+          at: workspace
+      - run:
+          command: find . -type d
       - aws-ecr/build-and-push-image:
           checkout: false
           repo: $ENVIRONMENT-$SITE-snt-apps
@@ -38,8 +52,8 @@ jobs:
     docker:
       - image: cimg/ruby:3.0.0
     steps:
-      - checkout
-      - ruby/install-deps
+      - attach_workspace:
+          at: workspace
       - ruby/rspec-test
 
   notify:
