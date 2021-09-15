@@ -53,7 +53,7 @@ jobs:
           command: bundle config set with test
       - ruby/install-deps
       - run:
-          command: bundle exec rake test 2>/dev/null
+          command: bundle exec rake test
       - store_test_results:
           path: test/reports
 
