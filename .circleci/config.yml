@@ -36,7 +36,8 @@ jobs:
       - run:
           name: Which yarn?
           command: yarn -v
-      - node/install-yarn
+      - node/install-packages:
+          pkg-manager: yarn 
       - save_cache:
           paths:
             - ~/node_modules
