@@ -11,3 +11,8 @@ class ActiveSupport::TestCase
 
   # Add more helper methods to be used by all tests here...
 end
+
+SimpleCov.at_exit do
+  SimpleCov.result.format!
+  SimpleCov.minimum_coverage 70
+end
