@@ -31,6 +31,9 @@ jobs:
       - node/install-packages:
           pkg-manager: yarn
 
+      - run:
+          command: pwd && find . -type d
+
   build-image:
     docker:
       - image: cimg/base:2021.04
