@@ -31,7 +31,7 @@ jobs:
           repo: $ENVIRONEMENT-$SITE-snt-apps
           #remote-docker-layer-caching: true
           setup-remote-docker: yes
-          tag: $APP_VERSION-$CIRCLE_BUILD_NUM
+          tag: ${APP_VERSION}-${CIRCLE_BUILD_NUM}
 
   notify:
     docker:
