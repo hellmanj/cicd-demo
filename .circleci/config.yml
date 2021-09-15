@@ -3,6 +3,7 @@ orbs:
   ruby: circleci/ruby@1.1.4
   node: circleci/node@4.7.0
   aws-ecr: circleci/aws-ecr@7.2.0
+  jq: circleci/jq@2.2.0
   slack: circleci/slack@4.4.4
 
 jobs:
@@ -36,12 +37,16 @@ jobs:
     steps:
       - attach_workspace:
           at: .
+      - jq/install
       - aws-ecr/build-and-push-image:
           checkout: false
           repo: $ENVIRONMENT-$SITE-snt-apps
           remote-docker-layer-caching: true
           setup-remote-docker: yes
           tag: ${CIRCLE_PROJECT_REPONAME}-${CIRCLE_BUILD_NUM}-${CIRCLE_SHA1}${CIRCLE_TAG}
+      - run:
+          name: scan image
+          command: until [ "$(aws ecr describe-image-scan-findings --repository-name $ENVIRONMENT-$SITE-snt-apps --image-id imageTag=${CIRCLE_PROJECT_REPONAME}-${CIRCLE_BUILD_NUM}-${CIRCLE_SHA1}${CIRCLE_TAG} | jq -r .imageScanStatus.status)" = "COMPLETE" ] ; do sleep 5; done
 
   test:
     docker:
