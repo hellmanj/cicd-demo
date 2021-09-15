@@ -52,7 +52,8 @@ jobs:
       - run:
           command: bundle config set with test
       - ruby/install-deps
-      - ruby/rspec-test
+      - run:
+          command: bundle exec rake test 2>/dev/null
       - store_test_results:
           path: test/reports
 
