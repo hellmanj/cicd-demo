@@ -1,7 +1,7 @@
 require "test_helper"
 
 class GuestsControllerTest < ActionDispatch::IntegrationTest
-  test "the truth" do
-    assert true
+  test "the lie" do
+    assert false
   end
 end
