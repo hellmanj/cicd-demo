@@ -24,8 +24,6 @@ jobs:
           pkg-manager: yarn
 
   build-image:
-    requires:
-      - build-deps
     docker:
       - image: cimg/base:2021.04
     steps:
@@ -37,8 +35,6 @@ jobs:
           tag: ${CIRCLE_BUILD_NUM}-${CIRCLE_SHA1}${CIRCLE_TAG}
 
   test:
-    requires:
-      - build-deps
     docker:
       - image: cimg/ruby:3.0.0
     steps:
@@ -57,5 +53,9 @@ workflows:
   develop:
     jobs:
       - build-deps
-      - build-image
-      - test
+      - build-image:
+          requires:
+            - build-deps
+      - test:
+          requires:
+            - build-deps
