@@ -40,6 +40,8 @@ jobs:
       - attach_workspace:
           at: .
       - run:
+          command: pwd && find . -type d
+      - run:
           command: find . -type d
       - aws-ecr/build-and-push-image:
           checkout: false
@@ -52,8 +54,12 @@ jobs:
     docker:
       - image: cimg/ruby:3.0.0
     steps:
+      - run:
+          command: pwd && find . -type d
       - attach_workspace:
           at: .
+      - run:
+          command: pwd && find . -type d
       - ruby/rspec-test
 
   notify:
