@@ -11,9 +11,9 @@ jobs:
       - image: cimg/ruby:3.0.0-node
     steps:
       - run:
-          command: find . -type d
+          command: pwd && find . -type d
       - persist_to_workspace:
-          root: workspace
+          root: .
           paths:
             - .
       - run:
@@ -36,9 +36,9 @@ jobs:
       - image: cimg/base:2021.04
     steps:
       - run:
-            command: find . -type d
+            command: pwd && find . -type d
       - attach_workspace:
-          at: workspace
+          at: .
       - run:
           command: find . -type d
       - aws-ecr/build-and-push-image:
@@ -53,7 +53,7 @@ jobs:
       - image: cimg/ruby:3.0.0
     steps:
       - attach_workspace:
-          at: workspace
+          at: .
       - ruby/rspec-test
 
   notify:
