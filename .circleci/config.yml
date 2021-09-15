@@ -1,0 +1,46 @@
+version: 2.1
+orbs:
+  ruby: circleci/ruby@1.1.4
+  aws-ecr: circleci/aws-ecr@7.2.0
+  slack: circleci/slack@4.4.4
+
+jobs:
+  build-app:
+    docker:
+      - image: cimg/ruby:2.7.2
+    steps:
+      - checkout
+      - run:
+          command: APP_VERSION=$(git describe --abbrev=0)
+      - restore_cache:
+          keys:
+            # when lock file changes, use increasingly general patterns to restore cache
+            - v1-gem-cache-{{ arch }}-{{ .Branch }}-{{ checksum "Gemfile.lock" }}
+            - v1-gem-cache-{{ arch }}-{{ .Branch }}-
+            - v1-gem-cache-{{ arch }}-
+      - run:
+          name: Which bundler?
+          command: bundle -v
+      - ruby/install-deps
+      - save_cache:
+          paths:
+            - ~/.bundle
+          key: v1-gem-cache-{{ arch }}-{{ .Branch }}-{{ checksum "Gemfile.lock" }}
+      - aws-ecr/build-and-push-image:
+          checkout: false
+          repo: $ENVIRONEMENT-$SITE-snt-apps
+          #remote-docker-layer-caching: true
+          setup-remote-docker: yes
+          tag: $APP_VERSION-$CIRCLE_BUILD_NUM
+
+  notify:
+    docker:
+      - image: cimg/base:2021.04
+    steps:
+      - slack/notify:
+          channel: cicd 
+
+workflows:
+  develop:
+    jobs:
+      - build-app
