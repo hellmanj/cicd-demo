@@ -1,17 +1,17 @@
 version: 2.1
 orbs:
   ruby: circleci/ruby@1.1.4
+  node: circleci/node@4.7.0
   aws-ecr: circleci/aws-ecr@7.2.0
   slack: circleci/slack@4.4.4
 
 jobs:
   build-app:
     docker:
-      - image: cimg/ruby:2.7.2
+      - image: cimg/ruby:3.0.0-node
     steps:
       - checkout
-      - run:
-          command: APP_VERSION=$(git describe --abbrev=0)
+      
       - restore_cache:
           keys:
             # when lock file changes, use increasingly general patterns to restore cache
@@ -26,12 +26,28 @@ jobs:
           paths:
             - ~/.bundle
           key: v1-gem-cache-{{ arch }}-{{ .Branch }}-{{ checksum "Gemfile.lock" }}
+
+      - restore_cache:
+          keys:
+            # when lock file changes, use increasingly general patterns to restore cache
+            - v1-node-cache-{{ arch }}-{{ .Branch }}-{{ checksum "yarn.lock" }}
+            - v1-node-cache-{{ arch }}-{{ .Branch }}-
+            - v1-node-cache-{{ arch }}-
+      - run:
+          name: Which yarn?
+          command: yarn -v
+      - node/install-yarn
+      - save_cache:
+          paths:
+            - ~/node_modules
+          key: v1-gem-cache-{{ arch }}-{{ .Branch }}-{{ checksum "yarn.lock" }}
+      
       - aws-ecr/build-and-push-image:
           checkout: false
-          repo: $ENVIRONEMENT-$SITE-snt-apps
+          repo: $ENVIRONMENT-$SITE-snt-apps
           #remote-docker-layer-caching: true
           setup-remote-docker: yes
-          tag: $APP_VERSION-$CIRCLE_BUILD_NUM
+          tag: ${CIRCLE_BUILD_NUM}-${CIRCLE_SHA1}${CIRCLE_TAG}
 
   notify:
     docker:
