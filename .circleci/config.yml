@@ -70,7 +70,7 @@ jobs:
 
             if [[ "${numberOfFindings}" -gt 0 ]]; then
                 echo "Scan found ${numberOfFindings} findings!"
-                exit 1
+                #exit 1
             fi
       - store_artifacts:
           path: ecr_scan_findings.json
