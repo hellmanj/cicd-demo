@@ -15,7 +15,7 @@ jobs:
       - run:
           name: Which bundler?
           command: bundle -v
-      - run
+      - run:
           command: bundle config set without test
       - ruby/install-deps
 
@@ -49,7 +49,7 @@ jobs:
     steps:
       - attach_workspace:
           at: .
-      - run
+      - run:
           command: bundle config set with test
       - ruby/rspec-test
       - store_test_results:
