@@ -45,8 +45,31 @@ jobs:
           setup-remote-docker: yes
           tag: ${CIRCLE_PROJECT_REPONAME}-${CIRCLE_BUILD_NUM}-${CIRCLE_SHA1}${CIRCLE_TAG}
       - run:
-          name: scan image
-          command: until [ "$(aws ecr describe-image-scan-findings --repository-name $ENVIRONMENT-$SITE-snt-apps --image-id imageTag=${CIRCLE_PROJECT_REPONAME}-${CIRCLE_BUILD_NUM}-${CIRCLE_SHA1}${CIRCLE_TAG} | jq -r .imageScanStatus.status)" = "COMPLETE" ] ; do sleep 5; done
+          command: |
+            get_findings() {
+                findings=$(aws ecr describe-image-scan-findings --repository-name "<< parameters.ecr-repository-name >>" --image-id "imageTag=\"$CIRCLE_SHA1\"")
+                echo "${findings}" | jq .
+                echo
+                status=$(echo "${findings}" | jq -r ".imageScanStatus.status")
+                numberOfFindings=$(echo "${findings}" | jq -r ".imageScanFindings.findings | length")
+            }
+
+            # Get the results of the scan or wait until they are ready
+            get_findings
+            while [[ "${status}" == "IN_PROGRESS" ]]; do
+                sleep 15
+                get_findings
+            done
+
+            if [[ "${status}" != *COMPLETE* ]]; then
+                echo "Scan does not appear COMPLETE"
+                exit 1
+            fi
+
+            if [[ "${numberOfFindings}" -gt 0 ]]; then
+                echo "Scan found ${numberOfFindings} findings!"
+                exit 1
+            fi
 
   test:
     docker:
