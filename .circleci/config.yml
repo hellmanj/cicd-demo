@@ -73,7 +73,6 @@ workflows:
       - test:
           requires:
             - build-deps
-#      - build-image:
-#          requires:
-#            - build-deps
-#
+      - build-image:
+          requires:
+            - build-deps

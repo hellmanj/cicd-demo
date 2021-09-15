@@ -36,3 +36,5 @@ yarn-debug.log*
 .idea/
 config/mode.yml
 config/backend.yml
+/test/reports/
+/coverage/
