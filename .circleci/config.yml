@@ -41,7 +41,7 @@ jobs:
           repo: $ENVIRONMENT-$SITE-snt-apps
           #remote-docker-layer-caching: true
           setup-remote-docker: yes
-          tag: ${CIRCLE_BUILD_NUM}-${CIRCLE_SHA1}${CIRCLE_TAG}
+          tag: ${CIRCLE_PROJECT_REPONAME}-${CIRCLE_BUILD_NUM}-${CIRCLE_SHA1}${CIRCLE_TAG}
 
   test:
     docker:
