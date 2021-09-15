@@ -39,7 +39,7 @@ jobs:
       - aws-ecr/build-and-push-image:
           checkout: false
           repo: $ENVIRONMENT-$SITE-snt-apps
-          #remote-docker-layer-caching: true
+          remote-docker-layer-caching: true
           setup-remote-docker: yes
           tag: ${CIRCLE_PROJECT_REPONAME}-${CIRCLE_BUILD_NUM}-${CIRCLE_SHA1}${CIRCLE_TAG}
 
