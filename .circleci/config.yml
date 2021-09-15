@@ -72,8 +72,8 @@ jobs:
                 echo "Scan found ${numberOfFindings} findings!"
                 exit 1
             fi
-        - store_artifacts:
-            path: ecr_scan_findings.json
+      - store_artifacts:
+          path: ecr_scan_findings.json
 
   test:
     docker:
