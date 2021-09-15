@@ -51,6 +51,7 @@ jobs:
           at: .
       - run:
           command: bundle config set with test
+      - ruby/install-deps
       - ruby/rspec-test
       - store_test_results:
           path: test/reports
@@ -66,9 +67,10 @@ workflows:
   develop:
     jobs:
       - build-deps
-      - build-image:
-          requires:
-            - build-deps
       - test:
           requires:
             - build-deps
+#      - build-image:
+#          requires:
+#            - build-deps
+#
