@@ -44,6 +44,11 @@ jobs:
           remote-docker-layer-caching: true
           setup-remote-docker: yes
           tag: ${CIRCLE_PROJECT_REPONAME}-${CIRCLE_BUILD_NUM}-${CIRCLE_SHA1}${CIRCLE_TAG}
+
+  scan-image:
+    docker:
+      - image: cimg/base:2021.04
+    steps:
       - run:
           command: |
             get_findings() {
@@ -110,3 +115,6 @@ workflows:
       - build-image:
           requires:
             - build-deps
+      - scan-image:
+          requires:
+            - build-image
