@@ -6,12 +6,12 @@ orbs:
   slack: circleci/slack@4.4.4
 
 jobs:
-  build-app:
+  build:
     docker:
       - image: cimg/ruby:3.0.0-node
     steps:
       - checkout
-      
+
       - run:
           name: Which bundler?
           command: bundle -v
@@ -21,7 +21,7 @@ jobs:
           name: Which yarn?
           command: yarn -v
       - node/install-packages:
-          pkg-manager: yarn 
+          pkg-manager: yarn
 
       - aws-ecr/build-and-push-image:
           checkout: false
@@ -30,14 +30,21 @@ jobs:
           setup-remote-docker: yes
           tag: ${CIRCLE_BUILD_NUM}-${CIRCLE_SHA1}${CIRCLE_TAG}
 
+  test:
+    docker:
+      - image: cimg/ruby:3.0.0
+    steps:
+      - ruby/rspec-test
+
   notify:
     docker:
       - image: cimg/base:2021.04
     steps:
       - slack/notify:
-          channel: cicd 
+          channel: cicd
 
 workflows:
   develop:
     jobs:
-      - build-app
+      - build
+      - test
