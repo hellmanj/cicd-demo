@@ -47,7 +47,7 @@ jobs:
       - run:
           command: |
             get_findings() {
-                findings=$(aws ecr describe-image-scan-findings --repository-name "<< parameters.ecr-repository-name >>" --image-id "imageTag=\"$CIRCLE_SHA1\"")
+                findings=$(aws ecr describe-image-scan-findings --repository-name $ENVIRONMENT-$SITE-snt-apps --image-id imageTag=${CIRCLE_PROJECT_REPONAME}-${CIRCLE_BUILD_NUM}-${CIRCLE_SHA1}${CIRCLE_TAG})
                 echo "${findings}" | jq .
                 echo
                 status=$(echo "${findings}" | jq -r ".imageScanStatus.status")
