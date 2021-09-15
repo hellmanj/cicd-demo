@@ -48,8 +48,7 @@ jobs:
           command: |
             get_findings() {
                 findings=$(aws ecr describe-image-scan-findings --repository-name $ENVIRONMENT-$SITE-snt-apps --image-id imageTag=${CIRCLE_PROJECT_REPONAME}-${CIRCLE_BUILD_NUM}-${CIRCLE_SHA1}${CIRCLE_TAG})
-                echo "${findings}" | jq .
-                echo
+                echo "${findings}" > ecr_scan_findings.json
                 status=$(echo "${findings}" | jq -r ".imageScanStatus.status")
                 numberOfFindings=$(echo "${findings}" | jq -r ".imageScanFindings.findings | length")
             }
@@ -61,6 +60,9 @@ jobs:
                 get_findings
             done
 
+            echo "Findings saved to ecr_scan_findings.json"
+            echo
+
             if [[ "${status}" != *COMPLETE* ]]; then
                 echo "Scan does not appear COMPLETE"
                 exit 1
@@ -70,6 +72,8 @@ jobs:
                 echo "Scan found ${numberOfFindings} findings!"
                 exit 1
             fi
+        - store_artifacts:
+            path: ecr_scan_findings.json
 
   test:
     docker:
