@@ -54,9 +54,11 @@ jobs:
       - ruby/install-deps
       - run:
           command: |
-            echo -e "test:\n  mode: backend" > config/mode.yml
+            echo -e "test:\n  mode: backend" > config/mode.yml &&
             bundle exec rake test
       - store_test_results:
+          path: test/reports
+      - store_artifacts:
           path: test/reports
 
   notify:
