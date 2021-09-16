@@ -118,7 +118,12 @@ jobs:
     docker:
       - image: cimg/base:2021.04
     steps:
-      - slack/notify
+      - slack/notify:
+          event: fail
+          template: basic_fail_1
+      - slack/notify:
+          event: pass
+          template: basic_succeess_1
 
 workflows:
   develop:
