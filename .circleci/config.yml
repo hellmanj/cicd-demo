@@ -232,7 +232,7 @@ jobs:
             PostToSlack() {
                 # Post once per channel listed by the channel parameter
                 #    The channel must be modified in SLACK_MSG_BODY
-
+                echo hello
                 # shellcheck disable=SC2001
                 for i in $(eval echo \""$SLACK_PARAM_CHANNEL"\" | sed "s/,/ /g")
                 do
