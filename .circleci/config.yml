@@ -117,8 +117,6 @@ jobs:
   notify:
     docker:
       - image: cimg/base:2021.04
-    context:
-      - slack
     steps:
       - slack/notify
 
@@ -143,3 +141,5 @@ workflows:
             - lint
             - test
             - scan-image
+          context:
+            - slack
