@@ -303,23 +303,23 @@ jobs:
 workflows:
   develop:
     jobs:
-      - build-deps
-      - lint:
-          requires:
-            - build-deps
-      - test:
-          requires:
-            - build-deps
-      - build-image:
-          requires:
-            - build-deps
-      - scan-image:
-          requires:
-            - build-image
+#      - build-deps
+#      - lint:
+#          requires:
+#            - build-deps
+#      - test:
+#          requires:
+#            - build-deps
+#      - build-image:
+#          requires:
+#            - build-deps
+#      - scan-image:
+#          requires:
+#            - build-image
       - notify:
-          requires:
-            - lint
-            - test
-            - scan-image
+#          requires:
+#            - lint
+#            - test
+#            - scan-image
           context:
             - slack
