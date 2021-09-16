@@ -44,7 +44,7 @@ jobs:
           repo: $ENVIRONMENT-$SITE-snt-apps
           remote-docker-layer-caching: true
           setup-remote-docker: yes
-          tag: ${CIRCLE_PROJECT_REPONAME}-${CIRCLE_BUILD_NUM}-${CIRCLE_SHA1}${CIRCLE_TAG}
+          tag: ${CIRCLE_PROJECT_REPONAME}-${CIRCLE_WORKFLOW_ID}-${CIRCLE_SHA1}${CIRCLE_TAG}
 
   scan-image:
     docker:
@@ -54,7 +54,7 @@ jobs:
       - run:
           command: |
             get_findings() {
-                findings=$(aws ecr describe-image-scan-findings --repository-name $ENVIRONMENT-$SITE-snt-apps --image-id imageTag=${CIRCLE_PROJECT_REPONAME}-${CIRCLE_BUILD_NUM}-${CIRCLE_SHA1}${CIRCLE_TAG})
+                findings=$(aws ecr describe-image-scan-findings --repository-name $ENVIRONMENT-$SITE-snt-apps --image-id imageTag=${CIRCLE_PROJECT_REPONAME}-${CIRCLE_WORKFLOW_ID}-${CIRCLE_SHA1}${CIRCLE_TAG})
                 echo "${findings}" > ecr_scan_findings.json
                 status=$(echo "${findings}" | jq -r ".imageScanStatus.status")
                 numberOfFindings=$(echo "${findings}" | jq -r ".imageScanFindings.findings | length")
