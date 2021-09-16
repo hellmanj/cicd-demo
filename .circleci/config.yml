@@ -4,7 +4,6 @@ orbs:
   node: circleci/node@4.7.0
   aws-cli: circleci/aws-cli@2.0.3
   aws-ecr: circleci/aws-ecr@7.2.0
-  jq: circleci/jq@2.2.0
   slack: circleci/slack@4.4.4
 
 slack-fail-post-step: &slack-fail-post-step
@@ -41,7 +40,6 @@ jobs:
     steps:
       - attach_workspace:
           at: .
-      - jq/install
       - aws-ecr/build-and-push-image:
           checkout: false
           repo: $ENVIRONMENT-$SITE-snt-apps
