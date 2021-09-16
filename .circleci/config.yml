@@ -184,7 +184,7 @@ jobs:
           matches.
         type: string
       template:
-        default: basic_pass_1
+        default: basic_success_1
         description: >-
           Use one of the built-in templates. Select the template name. Preview each
           template on the gitHub Readme:
