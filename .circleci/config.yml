@@ -109,9 +109,8 @@ jobs:
       - run:
           command: bundle config set with test
       - ruby/install-deps
-      - ruby/rubocop-check:
-          format: junit
-          out-path: rubocop-results
+      - run:
+          command: bundle exec rubocop . --format junit --out rubocop-results/check-results.xml
       - store_test_results:
           path: rubocop-results
 
