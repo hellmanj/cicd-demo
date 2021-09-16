@@ -209,6 +209,7 @@ jobs:
                 #   If sending message, default to custom template,
                 #   if none is supplied, check for a pre-selected template value.
                 #   If none, error.
+                echo UUU $SLACK_PARAM_TEMPLATE
                 if [ -n "${SLACK_PARAM_CUSTOM:-}" ]; then
                     ModifyCustomTemplate
                     # shellcheck disable=SC2016
@@ -224,6 +225,7 @@ jobs:
                     exit 1
                 fi
                 # Insert the default channel. THIS IS TEMPORARY
+                echo WWW $T2
                 T2=$(echo "$T2" | jq ". + {\"channel\": \"$SLACK_DEFAULT_CHANNEL\"}")
                 SLACK_MSG_BODY=$T2
             }
