@@ -8,12 +8,12 @@ orbs:
   slack: circleci/slack@4.4.4
 
 slack-fail-post-step: &slack-fail-post-step
-          context:
-            - slack
-          post-steps:
-            - slack/notify:
-                event: fail
-                template: basic_fail_1
+  context:
+    - slack
+  post-steps:
+    - slack/notify:
+        event: fail
+        template: basic_fail_1
 
 jobs:
   build-deps:
@@ -132,17 +132,22 @@ jobs:
 workflows:
   develop:
     jobs:
-      - build-deps:      *slack-fail-post-step
-      - lint:            *slack-fail-post-step
+      - build-deps:
+          <<: *slack-fail-post-step
+      - lint:
+          <<: *slack-fail-post-step
           requires:
             - build-deps
-      - test:            *slack-fail-post-step
+      - test:
+          <<: *slack-fail-post-step
           requires:
             - build-deps
-      - build-image:     *slack-fail-post-step
+      - build-image:
+          <<: *slack-fail-post-step
           requires:
             - build-deps
-      - scan-image:      *slack-fail-post-step
+      - scan-image:
+          <<: *slack-fail-post-step
           requires:
             - build-image
       - notify-success:
