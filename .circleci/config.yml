@@ -118,8 +118,7 @@ jobs:
     docker:
       - image: cimg/base:2021.04
     steps:
-      - slack/notify:
-          channel: cicd
+      - slack/notify
 
 workflows:
   develop:
@@ -137,3 +136,8 @@ workflows:
       - scan-image:
           requires:
             - build-image
+      - notify:
+          requires:
+            - lint
+            - test
+            - scan-image
