@@ -7,6 +7,14 @@ orbs:
   jq: circleci/jq@2.2.0
   slack: circleci/slack@4.4.4
 
+slack-fail-post-step: &slack-fail-post-step
+  context:
+    - slack
+  post-steps:
+    - slack/notify:
+        event: fail
+        template: basic_fail_1
+
 jobs:
   build-deps:
     docker:
@@ -114,34 +122,30 @@ jobs:
       - store_test_results:
           path: rubocop-results
 
-  notify:
+  notify-success:
     docker:
       - image: cimg/base:2021.04
     steps:
       - slack/notify:
-          event: fail
-          template: basic_fail_1
-      - slack/notify:
-          event: pass
           template: basic_success_1
 
 workflows:
   develop:
     jobs:
-      - build-deps
-      - lint:
+      - build-deps:      *slack-fail-post-step
+      - lint:            *slack-fail-post-step
           requires:
             - build-deps
-      - test:
+      - test:            *slack-fail-post-step
           requires:
             - build-deps
-      - build-image:
+      - build-image:     *slack-fail-post-step
           requires:
             - build-deps
-      - scan-image:
+      - scan-image:      *slack-fail-post-step
           requires:
             - build-image
-      - notify:
+      - notify-success:
           requires:
             - lint
             - test
