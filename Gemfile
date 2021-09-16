@@ -47,11 +47,10 @@ group :test do
   gem 'webdrivers'
   gem 'rexml', '~> 3.2'
   gem 'simplecov'
+  gem "rubocop", "~> 1.21"
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 gem "minitest-ci", "~> 3.4"
-
-gem "rubocop", "~> 1.21"

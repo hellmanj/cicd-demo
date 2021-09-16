@@ -104,10 +104,15 @@ jobs:
     docker:
       - image: cimg/ruby:3.0.0
     steps:
-      - checkout
-      - ruby/rubocop-check
+      - attach_workspace:
+          at: .
+      - run:
+          command: bundle config set with test
+      - ruby/install-deps
+      - ruby/rubocop-check:
+          out-path: rubocop-results
       - store_artifacts:
-          path: /tmp/rubocop-results
+          path: rubocop-results
 
   notify:
     docker:
@@ -119,8 +124,10 @@ jobs:
 workflows:
   develop:
     jobs:
-      - lint
       - build-deps
+      - lint:
+          requires:
+            - build-deps
       - test:
           requires:
             - build-deps
