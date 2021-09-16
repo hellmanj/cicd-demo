@@ -232,13 +232,13 @@ jobs:
             PostToSlack() {
                 # Post once per channel listed by the channel parameter
                 #    The channel must be modified in SLACK_MSG_BODY
-                echo hello
                 # shellcheck disable=SC2001
                 for i in $(eval echo \""$SLACK_PARAM_CHANNEL"\" | sed "s/,/ /g")
                 do
                     echo "Sending to Slack Channel: $i"
+                    echo XXX $SLACK_MSG_BODY
                     SLACK_MSG_BODY=$(echo "$SLACK_MSG_BODY" | jq --arg channel "$i" '.channel = $channel')
-                    echo $SLACK_MSG_BODY
+                    echo YYY $SLACK_MSG_BODY
                     SLACK_SENT_RESPONSE=$(curl -s -f -X POST -H 'Content-type: application/json' -H "Authorization: Bearer $SLACK_ACCESS_TOKEN" --data "$SLACK_MSG_BODY" https://slack.com/api/chat.postMessage)
                     SLACK_ERROR_MSG=$(echo "$SLACK_SENT_RESPONSE" | jq '.error')
                     if [ ! "$SLACK_ERROR_MSG" = "null" ]; then
