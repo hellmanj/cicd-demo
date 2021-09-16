@@ -115,6 +115,80 @@ jobs:
           path: rubocop-results
 
   notify:
+    description: Notify a Slack channel with a custom message.
+    parameters:
+      branch_pattern:
+        default: .+
+        description: >
+          A comma separated list of regex matchable branch names. Notifications will
+          only be sent if sent from a job from these branches. By default ".+" will
+          be used to match all branches. Pattern must match the full string, no
+          partial matches.
+        type: string
+      channel:
+        default: $SLACK_DEFAULT_CHANNEL
+        description: >
+          Select which channel in which to post to. Channel name or ID will work.
+          You may include a comma separated list of channels if you wish to post to
+          multiple channels at once. Set the "SLACK_DEFAULT_CHANNEL" environment
+          variable for the default channel.
+        type: string
+      custom:
+        default: ''
+        description: >
+          Enter a custom message template.
+
+
+          1. Create your message template using the Block Kit Builder:
+          https://app.slack.com/block-kit-builder/.
+
+          2. Insert any desired environment variables.
+
+          3. Paste value here.
+        type: string
+      event:
+        default: always
+        description: >
+          In what event should this message send? Options: ["fail", "pass",
+          "always"]
+        enum:
+          - fail
+          - pass
+          - always
+        type: enum
+      ignore_errors:
+        default: true
+        description: >
+          Ignore errors posting to Slack.
+
+          Disable to catch initial setup errors. Re-enable to prevent Slack errors
+          from affecting your pipeline.
+        type: boolean
+      mentions:
+        default: ''
+        description: >
+          Exports to the "$SLACK_PARAM_MENTIONS" environment variable for use in
+          templates.
+
+          Mention users via the @ symbol: "@USER"
+
+          If the username contains a space, the Slack ID must be used with angled
+          brackets: "<@U8XXXXXXX>"
+        type: string
+      tag_pattern:
+        default: .+
+        description: >
+          A comma separated list of regex matchable tag names. Notifications will
+          only be sent if sent from a job from these branches. By default ".+" will
+          be used to match all tags. Pattern must match the full string, no partial
+          matches.
+        type: string
+      template:
+        default: ''
+        description: >-
+          Use one of the built-in templates. Select the template name. Preview each
+          template on the gitHub Readme:
+        type: string
     docker:
       - image: cimg/base:2021.04
     steps:
