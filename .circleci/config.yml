@@ -13,20 +13,15 @@ jobs:
       - image: cimg/ruby:3.0.0-node
     steps:
       - checkout
-
       - run:
-          name: Which bundler?
-          command: bundle -v
-      - run:
-          command: bundle config set without test
+          name: Setup bundler
+          command: bundle -v && bundle config set without test
       - ruby/install-deps
-
       - run:
-          name: Which yarn?
+          name: Setup yarn
           command: yarn -v
       - node/install-packages:
           pkg-manager: yarn
-
       - persist_to_workspace:
           root: .
           paths:
@@ -52,6 +47,7 @@ jobs:
     steps:
       - aws-cli/install
       - run:
+          name: Get image scan findings
           command: |
             get_findings() {
                 findings=$(aws ecr describe-image-scan-findings --repository-name $ENVIRONMENT-$SITE-snt-apps --image-id imageTag=${CIRCLE_PROJECT_REPONAME}-${CIRCLE_WORKFLOW_ID}-${CIRCLE_SHA1}${CIRCLE_TAG})
@@ -89,9 +85,11 @@ jobs:
       - attach_workspace:
           at: .
       - run:
+          name: Setup bundler
           command: bundle config set with test
       - ruby/install-deps
       - run:
+          name: Setup and run tests
           command: |
             echo -e "test:\n  mode: backend" > config/mode.yml &&
             bundle exec rake test
@@ -107,9 +105,11 @@ jobs:
       - attach_workspace:
           at: .
       - run:
+          name: Setup bundler
           command: bundle config set with test
       - ruby/install-deps
       - run:
+          name: Run rubocop
           command: bundle exec rubocop . --format junit --out rubocop-results/check-results.xml || true
       - store_test_results:
           path: rubocop-results
