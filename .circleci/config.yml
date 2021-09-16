@@ -110,7 +110,7 @@ jobs:
           command: bundle config set with test
       - ruby/install-deps
       - run:
-          command: bundle exec rubocop . --format junit --out rubocop-results/check-results.xml --fail-level fatal
+          command: bundle exec rubocop . --format junit --out rubocop-results/check-results.xml && exit 0
       - store_test_results:
           path: rubocop-results
 
