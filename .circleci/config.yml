@@ -110,8 +110,9 @@ jobs:
           command: bundle config set with test
       - ruby/install-deps
       - ruby/rubocop-check:
+          format: junit
           out-path: rubocop-results
-      - store_artifacts:
+      - store_test_results:
           path: rubocop-results
 
   notify:
