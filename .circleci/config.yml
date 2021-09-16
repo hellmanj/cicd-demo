@@ -147,7 +147,7 @@ jobs:
           3. Paste value here.
         type: string
       event:
-        default: always
+        default: pass
         description: >
           In what event should this message send? Options: ["fail", "pass",
           "always"]
@@ -184,7 +184,7 @@ jobs:
           matches.
         type: string
       template:
-        default: ''
+        default: basic_pass_1
         description: >-
           Use one of the built-in templates. Select the template name. Preview each
           template on the gitHub Readme:
