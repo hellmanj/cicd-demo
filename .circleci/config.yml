@@ -192,6 +192,8 @@ workflows:
           filters:
             tags:
               only: /\d+\.\d+\.\d+/
+            branches:
+              ignore: /.*/
       - deploy-prod:
           <<: *slack-fail-post-step
           requires:
@@ -199,3 +201,5 @@ workflows:
           filters:
             tags:
               only: /\d+\.\d+\.\d+/
+            branches:
+              ignore: /.*/
