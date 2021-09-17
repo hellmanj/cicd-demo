@@ -14,6 +14,11 @@ slack-fail-post-step: &slack-fail-post-step
         event: fail
         template: basic_fail_1
 
+ignore-production: &ignore-production
+  filters:
+    branches:
+      ignore: production
+
 jobs:
   build-deps:
     docker:
@@ -120,6 +125,32 @@ jobs:
       - store_test_results:
           path: rubocop-results
 
+  deploy-dev:
+    docker:
+      - image: cimg/base:2021.04
+    steps:
+      - run:
+          command: echo Successfully deployed to dev!
+      - slack/notify:
+          template: basic_success_1
+
+
+  deploy-prod:
+    docker:
+      - image: cimg/base:2021.04
+    steps:
+      - run:
+          command: echo Successfully deployed to prod!
+      - slack/notify:
+          template: basic_success_1
+
+  approve-deploy-prod:
+    docker:
+      - image: cimg/base:2021.04
+    steps:
+      - slack/notify:
+          mention: "@jared.hellman"
+
   notify-success:
     docker:
       - image: cimg/base:2021.04
@@ -128,30 +159,57 @@ jobs:
           template: basic_success_1
 
 workflows:
-  develop:
+  build-test-release:
     jobs:
       - build-deps:
           <<: *slack-fail-post-step
+          <<: *ignore-production
       - lint:
           <<: *slack-fail-post-step
+          <<: *ignore-production
           requires:
             - build-deps
       - test:
           <<: *slack-fail-post-step
+          <<: *ignore-production
           requires:
             - build-deps
       - build-image:
           <<: *slack-fail-post-step
+          <<: *ignore-production
           requires:
             - build-deps
       - scan-image:
           <<: *slack-fail-post-step
+          <<: *ignore-production
           requires:
             - build-image
-      - notify-success:
+      - deploy-dev:
+          <<: *slack-fail-post-step
           requires:
             - lint
             - test
             - scan-image
-          context:
-            - slack
+          filters:
+            branches:
+              only: develop
+      - approve-deploy-prod:
+          requires:
+            - lint
+            - test
+            - scan-image
+          type: approval
+          filters:
+            tags:
+              only: /\d+\.\d+\.\d+/
+            branches:
+              ignore: /.*/
+      - deploy-prod:
+          <<: *slack-fail-post-step
+          requires:
+            - approve-deploy-prod
+          filters:
+            tags:
+              only: /\d+\.\d+\.\d+/
+            branches:
+              ignore: /.*/
