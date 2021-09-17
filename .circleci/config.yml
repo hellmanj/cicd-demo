@@ -120,6 +120,27 @@ jobs:
       - store_test_results:
           path: rubocop-results
 
+  deploy-dev:
+    docker:
+      - image: cimg/base:2021.04
+    steps:
+      - run:
+          command: echo Successfully deployed to dev!
+
+  deploy-prod:
+    docker:
+      - image: cimg/base:2021.04
+    steps:
+      - run:
+          command: echo Successfully deployed to prod!
+
+  approve-deploy-prod:
+    docker:
+      - image: cimg/base:2021.04
+    steps:
+      - slack/notify:
+          notify: "@jared.hellman"
+
   notify-success:
     docker:
       - image: cimg/base:2021.04
@@ -128,7 +149,7 @@ jobs:
           template: basic_success_1
 
 workflows:
-  develop:
+  build-test-release:
     jobs:
       - build-deps:
           <<: *slack-fail-post-step
@@ -148,10 +169,26 @@ workflows:
           <<: *slack-fail-post-step
           requires:
             - build-image
-      - notify-success:
+      - deploy-dev:
           requires:
             - lint
             - test
             - scan-image
-          context:
-            - slack
+          filters:
+            branches:
+              only: develop
+      - approve-deploy-prod:
+          requires:
+            - lint
+            - test
+            - scan-image
+          type: approval
+          filters:
+            tags:
+              only: /\d+\.\d+\.\d+/
+      - deploy-prod:
+          requires:
+            - approve-deploy-prod
+          filters:
+            tags:
+              only: /\d+\.\d+\.\d+/
