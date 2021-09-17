@@ -151,13 +151,6 @@ jobs:
       - slack/notify:
           mention: "@jared.hellman"
 
-  notify-success:
-    docker:
-      - image: cimg/base:2021.04
-    steps:
-      - slack/notify:
-          template: basic_success_1
-
 workflows:
   build-test-release:
     jobs:
