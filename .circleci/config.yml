@@ -14,10 +14,10 @@ slack-fail-post-step: &slack-fail-post-step
         event: fail
         template: basic_fail_1
 
-ignore-production: &ignore-production
+ignore-master: &ignore-master
   filters:
     branches:
-      ignore: production
+      ignore: master
 
 jobs:
   build-deps:
@@ -163,25 +163,25 @@ workflows:
     jobs:
       - build-deps:
           <<: *slack-fail-post-step
-          <<: *ignore-production
+          <<: *ignore-master
       - lint:
           <<: *slack-fail-post-step
-          <<: *ignore-production
+          <<: *ignore-master
           requires:
             - build-deps
       - test:
           <<: *slack-fail-post-step
-          <<: *ignore-production
+          <<: *ignore-master
           requires:
             - build-deps
       - build-image:
           <<: *slack-fail-post-step
-          <<: *ignore-production
+          <<: *ignore-master
           requires:
             - build-deps
       - scan-image:
           <<: *slack-fail-post-step
-          <<: *ignore-production
+          <<: *ignore-master
           requires:
             - build-image
       - deploy-dev:
