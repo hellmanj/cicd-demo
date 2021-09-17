@@ -126,6 +126,9 @@ jobs:
     steps:
       - run:
           command: echo Successfully deployed to dev!
+      - slack/notify:
+          template: basic_success_1
+
 
   deploy-prod:
     docker:
@@ -133,13 +136,15 @@ jobs:
     steps:
       - run:
           command: echo Successfully deployed to prod!
+      - slack/notify:
+          template: basic_success_1
 
   approve-deploy-prod:
     docker:
       - image: cimg/base:2021.04
     steps:
       - slack/notify:
-          notify: "@jared.hellman"
+          mention: "@jared.hellman"
 
   notify-success:
     docker:
@@ -170,6 +175,7 @@ workflows:
           requires:
             - build-image
       - deploy-dev:
+          <<: *slack-fail-post-step
           requires:
             - lint
             - test
@@ -187,6 +193,7 @@ workflows:
             tags:
               only: /\d+\.\d+\.\d+/
       - deploy-prod:
+          <<: *slack-fail-post-step
           requires:
             - approve-deploy-prod
           filters:
